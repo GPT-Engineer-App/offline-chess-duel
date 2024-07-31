@@ -1,11 +1,25 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from 'react';
+import ChessBoard from '../components/ChessBoard';
+import GameInfo from '../components/GameInfo';
 
 const Index = () => {
+  const [currentPlayer, setCurrentPlayer] = useState('white');
+  const [gameStatus, setGameStatus] = useState('ongoing');
+
+  const handleTurn = () => {
+    setCurrentPlayer(currentPlayer === 'white' ? 'black' : 'white');
+  };
+
+  const handleGameEnd = (status) => {
+    setGameStatus(status);
+  };
+
   return (
-    <div className="flex justify-center items-center">
-      <div className="text-center">
-        <h1 className="text-3xl">Your Blank Canvas</h1>
-        <p>Chat with the agent to start making edits.</p>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+      <h1 className="text-4xl font-bold mb-8">Two-Player Chess</h1>
+      <div className="flex flex-col md:flex-row gap-8">
+        <ChessBoard currentPlayer={currentPlayer} onTurn={handleTurn} onGameEnd={handleGameEnd} />
+        <GameInfo currentPlayer={currentPlayer} gameStatus={gameStatus} />
       </div>
     </div>
   );
