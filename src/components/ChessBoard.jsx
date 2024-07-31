@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { initialChessBoard } from '../utils/chessUtils';
+import { initialChessBoard, isValidMove } from '../utils/chessUtils';
 import ChessPiece from './ChessPiece';
 
 const ChessBoard = ({ currentPlayer, onTurn, onGameEnd }) => {
@@ -8,13 +8,17 @@ const ChessBoard = ({ currentPlayer, onTurn, onGameEnd }) => {
 
   const handleSquareClick = (row, col) => {
     if (selectedPiece) {
-      // Move logic here (simplified for now)
-      const newBoard = [...board];
-      newBoard[row][col] = newBoard[selectedPiece.row][selectedPiece.col];
-      newBoard[selectedPiece.row][selectedPiece.col] = null;
-      setBoard(newBoard);
-      setSelectedPiece(null);
-      onTurn();
+      if (isValidMove(board, selectedPiece, { row, col }, currentPlayer)) {
+        const newBoard = [...board];
+        newBoard[row][col] = newBoard[selectedPiece.row][selectedPiece.col];
+        newBoard[selectedPiece.row][selectedPiece.col] = null;
+        setBoard(newBoard);
+        setSelectedPiece(null);
+        onTurn();
+      } else {
+        // Invalid move, deselect the piece
+        setSelectedPiece(null);
+      }
     } else if (board[row][col] && board[row][col].color === currentPlayer) {
       setSelectedPiece({ row, col });
     }
